@@ -1,3 +1,10 @@
+/*
+ * Title: devlinks.js
+ * Purpose: A nicer way to treat development placeholder links
+ * Author: Jeremy Fields, Viget Labs
+ */
+
+
 var Util = Util || {};
 
 (function () {
