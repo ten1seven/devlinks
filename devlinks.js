@@ -125,3 +125,6 @@ var Util = Util || {};
 	};
 
 }());
+
+// init this
+Util.devLinks();
