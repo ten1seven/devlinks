@@ -19,13 +19,16 @@ var Util = Util || {};
 			
 			// append message container to body
 			Util.vars.msgContainer.style.position = 'absolute';
-			Util.vars.msgContainer.style.right = '20px';
-			Util.vars.msgContainer.style.top = '20px';
+			Util.vars.msgContainer.style.right = '30px';
+			Util.vars.msgContainer.style.top = '30px';
 			Util.vars.body.appendChild(Util.vars.msgContainer);
 			
+			// look through dom for all links and determine if they have _TEST in the url
 			var links = document.getElementsByTagName('a');
 			for (var i = 0; i < links.length; i++) {
 				if (links[i].getAttribute('href').indexOf('_TEST') > -1) {
+					
+					// if it's a test link set a click handler
 					links[i].onclick = function() {
 						Util.addMessage(this.innerHTML);
 						
@@ -36,51 +39,78 @@ var Util = Util || {};
 			
 		},
 		
+		// adds a div to the message container with the new message as text
 		addMessage: function(msg) {
 			
 			// create new element
 			var message = document.createElement('div');
-			var text = document.createTextNode(msg);
-			message.appendChild(text);
+			message.innerHTML = '<strong>' + msg + '</strong> is still in development!';
 			
 			// add styles
-			message.style.backgroundColor = '#c00';
-			message.style.borderRadius = '6px';
-			message.style.color = '#fff';
-			message.style.fontFamily = 'sans-serif';
-			message.style.fontSize = '14px';
-			message.style.marginBottom = '10px';
-			message.style.padding = '20px';
-			message.style.width = '260px';
-			message.className = 'util-message';
+			Util.addStyles(message);
 			
 			// append to body
 			Util.vars.msgContainer.appendChild(message);
 			
-		},
-		
-		positionMessage: function() {
-			
-			var messages = Util.getElementsByClassName(document.body,'util-message');
-			var top = 20;
-			
-			if (messages.length > 0) {
-				top = messages[messages.length - 1].offsetTop + messages[messages.length - 1].clientHeight + 10;
-			}
-			
-			return top;
+			// set a timer to remove the element after 3s
+			window.setTimeout(function() {
+				
+				// fade out
+				Util.fadeOut(message);
+				
+			},3000);
 			
 		},
 		
+		// adds styles to the message
+		addStyles: function(elm) {
+			elm.style.backgroundColor = '#b94a48';
+			elm.style.border = '1px solid #a74240';
+			elm.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.2)';
+			elm.style.textShadow = '0 -1px 0 rgba(0,0,0,0.2)';
+			elm.style.borderRadius = '6px';
+			elm.style.color = '#fff';
+			elm.style.fontFamily = 'sans-serif';
+			elm.style.fontSize = '14px';
+			elm.style.marginBottom = '10px';
+			elm.style.padding = '20px';
+			elm.style.width = '260px';
+			elm.className = 'util-message';
+		},
 		
-		getElementsByClassName: function(node, classname) {
+		// runs a fadeout animation on a given element and removes it from the dom
+		fadeOut: function(elm) {
 			
-			var a = [];
-			var re = new RegExp('(^| )'+classname+'( |$)');
-			var els = node.getElementsByTagName("*");
-			for(var i=0,j=els.length; i<j; i++)
-				if(re.test(els[i].className))a.push(els[i]);
-			return a;
+			// starting opacity
+			var opacity = 1;
+			
+			// timed function to increment the fade out
+			var fadeTimer = function() {
+				opacity = opacity - 0.05;
+				
+				window.setTimeout(function() {
+					elm.style.opacity = opacity;
+					elm.style.filter = 'alpha(opacity = ' + (opacity*100) + ')';
+					
+					testOpacity();
+				},10);
+			};
+			
+			// checks to see if the element is fully faded out
+			var testOpacity = function() {
+				
+				// if 'yes', remove from the dom
+				if (opacity < 0) {
+					Util.vars.msgContainer.removeChild(elm);
+				
+				// if 'no', run the fadeout again
+				} else {
+					fadeTimer();
+				}
+			};
+			
+			// run the fadeout for the first time
+			fadeTimer();
 			
 		}
 		
