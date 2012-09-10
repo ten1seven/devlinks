@@ -1,4 +1,4 @@
 devlinks
 ========
 
-A nicer way to treat development placeholder links
+A nicer way to treat development placeholder links.
