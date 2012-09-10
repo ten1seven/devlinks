@@ -93,7 +93,7 @@ var Util = Util || {};
 			
 			// timed function to increment the fade out
 			var fadeTimer = function() {
-				opacity = opacity - 0.05;
+				opacity = opacity - 0.04;
 				
 				window.setTimeout(function() {
 					elm.style.opacity = opacity;
